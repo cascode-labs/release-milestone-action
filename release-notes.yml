@@ -1,0 +1,67 @@
+# Trigger the workflow on milestone events
+on:
+  milestone:
+    types: [closed]
+  workflow_dispatch:
+    inputs:
+      milestoneId:
+        description: 'Milestone ID'
+        required: true
+        default: '1'
+name: Milestone Closure
+jobs:
+  create-release-notes:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash -l {0}
+    steps:
+    - uses: actions/checkout@master
+    - name: Check if file exists
+      run: |
+        if [ -f "${{ github.workspace }}/temp_${{ github.event.milestone.title }}/${{ github.event.milestone.title }}.md" ]
+        then
+          rm -f ${{ github.workspace }}/temp_${{ github.event.milestone.title }}/${{ github.event.milestone.title }}.md
+        fi
+    - name: Create Release Notes
+      uses: docker://decathlon/release-notes-generator-action:2.0.1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        OUTPUT_FOLDER: temp_${{ github.event.milestone.title }}
+        USE_MILESTONE_TITLE: "true"
+    - uses: actions/upload-artifact@v2
+      with:
+        name: ${{ github.event.milestone.title }}
+        path: ${{ github.workspace }}/temp_${{ github.event.milestone.title }}
+    - name: download artifact into repo
+      run: |
+        cp -R ${{ github.workspace }}/temp_${{ github.event.milestone.title }}/. ${{ github.workspace }}/docs/release_notes/
+    - uses: stefanzweifel/git-auto-commit-action@v4
+      with:
+        # Optional, but recommended
+        # Defaults to "Apply automatic changes"
+        commit_message: Add release notes for milestone ${{ github.event.milestone.title }}
+        file_pattern: docs/*
+  
+  
+  create-combined-output:
+    runs-on: ubuntu-latest
+    needs: create-release-notes
+    defaults:
+      run:
+        shell: bash -l {0}
+    steps:
+    - uses: actions/checkout@master
+    - uses: conda-incubator/setup-miniconda@v2
+      with:
+        python-version: 3.7
+    - name: combine outputs
+      run: |
+        git pull
+        cd docs
+        python combine_release_notes.py
+    - uses: stefanzweifel/git-auto-commit-action@v4
+      with:
+        # Optional, but recommended
+        # Defaults to "Apply automatic changes"
+        commit_message: Add compiled release notes
