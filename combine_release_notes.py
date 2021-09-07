@@ -1,18 +1,21 @@
 import os
 from typing import List
 
+RELEASE_NOTES_DIRECTORY = "./tests/docs/raw_release_notes"
+COMBINED_NOTES_PATH = "./Release_Note_Log.md"
+
 def create_release_note_file():
-    sorted_files, mapping = _sort_filenames(os.listdir("./release_notes"))
-    with open("./source/Release_Note_Log.md", "w") as rewrite:
+    sorted_files, mapping = _sort_filenames(os.listdir(RELEASE_NOTES_DIRECTORY))
+    with open(COMBINED_NOTES_PATH, "w") as rewrite:
         rewrite.write('Release Note Log\n')
         rewrite.write('---------------------------------')
         rewrite.close()
-    with open("./source/Release_Note_Log.md", "a") as new_file:
+    with open(COMBINED_NOTES_PATH, "a") as new_file:
         for version_name in sorted_files:
             full_filename = mapping[version_name]
             new_file.write("\n******************************")
             new_file.write("\n### Version: " + version_name + "\n")
-            curr_release_file = open("./release_notes/" + full_filename, "r")
+            curr_release_file = open("./tests/docs/raw_release_notes/" + full_filename, "r")
             new_file.write(curr_release_file.read())
             new_file.write("\n")
             curr_release_file.close()
@@ -34,6 +37,7 @@ def _sort_filenames(files):
     versions.sort(key=lambda s: list(map(int, s.split("."))))
     return versions[::-1], version_files
 
+
 def _sort_filenames2(filenames: List[str]):
     filenames.remove("release_notes_summary.md")
     versions = list()
@@ -47,6 +51,7 @@ def _sort_filenames2(filenames: List[str]):
     return versions
 
 
+def _sort_filename3(filenames: List[str]):
     versions = list()
     version_files = dict()
     for file in files:
