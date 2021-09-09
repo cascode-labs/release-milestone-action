@@ -64,7 +64,7 @@ runs:
     - uses: actions/upload-artifact@v2
       with:
         name: ${{ github.event.milestone.title }}
-        path: ${{ github.workspace }}/temp_${{ github.event.milestone.title }}
+        path: ${{ github.workspace }}/release_notes/${{ github.event.milestone.title }}
     - uses: actions/create-release@v1
       with:
         tag_name: ${{ github.ref }}
