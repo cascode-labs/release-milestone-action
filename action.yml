@@ -30,7 +30,7 @@ runs:
       run: |
         pip install semver
         SPLICED_TITLE=`echo "${{ github.event.milestone.title }}" | cut -d'v' -f 2`
-        semver check ${SPLICED_TITLE}
+        pysemver check ${SPLICED_TITLE}
       shell: bash -l {0}
     - name: Update version
       run: |
