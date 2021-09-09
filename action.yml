@@ -25,10 +25,10 @@ outputs:
     value: ${{ steps.build-package.outputs.PACKAGE_PATH }}
 runs:
   using: "composite"
-  shell: bash -l {0}
   steps:
     - name: Install pysemver
       run: pip install pysemver
+      shell: bash -l {0}
     - name: Check release name
       run: |
         SPLICED_TITLE=`echo "${{ github.event.milestone.title }}" | cut -d'v' -f 2`
@@ -40,11 +40,13 @@ runs:
         else
           echo "Unable to find version file in current directory. Creating version file with current milestone title."
         fi
+      shell: bash -l {0}
     - name: Remove existing file
       run: |
         if [ -f "${{ github.workspace }}/temp_${{ github.event.milestone.title }}/${{ github.event.milestone.title }}.md" ]; then
           rm -f ${{ github.workspace }}/temp_${{ github.event.milestone.title }}/${{ github.event.milestone.title }}.md
         fi
+      shell: bash -l {0}
     - name: Create Release Notes
       uses: docker://decathlon/release-notes-generator-action:2.0.1
       env:
@@ -56,6 +58,7 @@ runs:
       run: |
         git pull
         python combine_release_notes.py
+      shell: bash -l {0}
     - uses: actions/upload-artifact@v2
       with:
         name: ${{ github.event.milestone.title }}
