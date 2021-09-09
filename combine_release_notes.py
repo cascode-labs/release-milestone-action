@@ -45,7 +45,7 @@ def _sort_filenames2(filenames: List[str]):
         try:
             version = pysemver.parse(filename[1:-3])
             versions.append(version)
-        catch:
+        except:
             pass
     versions.sort()
     return versions
