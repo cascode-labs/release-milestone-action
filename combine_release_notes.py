@@ -1,7 +1,7 @@
 import os
 from typing import List
 
-RELEASE_NOTES_DIRECTORY = "./release_notes"
+RELEASE_NOTES_DIRECTORY = "../release_notes"
 COMBINED_NOTES_PATH = "./Release_Note_Log.md"
 
 def create_release_note_file():
