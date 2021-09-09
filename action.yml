@@ -33,6 +33,7 @@ runs:
       run: |
         SPLICED_TITLE=`echo "${{ github.event.milestone.title }}" | cut -d'v' -f 2`
         pysemver check ${SPLICED_TITLE}
+      shell: bash -l {0}
     - name: Update version
       run: |
         if [ -f version ]; then
