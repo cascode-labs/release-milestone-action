@@ -25,6 +25,9 @@ outputs:
     value: ${{ steps.build-package.outputs.PACKAGE_PATH }}
 runs:
   using: "composite"
+  defaults:
+    run:
+      shell: bash -l {0}
   steps:
     - name: Install pysemver
       run: pip install pysemver
