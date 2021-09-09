@@ -59,7 +59,7 @@ runs:
         ls -al 
         echo "------"
         pwd
-        python combine_release_notes.py
+        python ${{ github.event.repository.name }}/combine_release_notes.py
       shell: bash -l {0}
     - uses: actions/upload-artifact@v2
       with:
