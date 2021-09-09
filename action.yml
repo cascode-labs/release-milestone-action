@@ -56,6 +56,9 @@ runs:
     - name: combine outputs
       run: |
         git pull
+        ls -al 
+        echo "------"
+        pwd
         python combine_release_notes.py
       shell: bash -l {0}
     - uses: actions/upload-artifact@v2
