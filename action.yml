@@ -45,12 +45,12 @@ runs:
         if [ -f "${{ github.workspace }}/temp_${{ github.event.milestone.title }}/${{ github.event.milestone.title }}.md" ]; then
           rm -f ${{ github.workspace }}/temp_${{ github.event.milestone.title }}/${{ github.event.milestone.title }}.md
         fi
-        mkdir -p ${{runner.temp}}/release_notes
+        mkdir -p ${{ github.workspace }}/release_notes
       shell: bash -l {0}
     - name: Create Release Notes
       uses: docker://decathlon/release-notes-generator-action:2.0.1
       env:
-        OUTPUT_FOLDER: ${{runner.temp}}/release_notes
+        OUTPUT_FOLDER: ${{ github.workspace }}/release_notes
         USE_MILESTONE_TITLE: "true"
 
     - name: combine outputs
