@@ -26,11 +26,9 @@ outputs:
 runs:
   using: "composite"
   steps:
-    - name: Install pysemver
-      run: pip install pysemver
-      shell: bash -l {0}
     - name: Check release name
       run: |
+        pip install pysemver
         SPLICED_TITLE=`echo "${{ github.event.milestone.title }}" | cut -d'v' -f 2`
         pysemver check ${SPLICED_TITLE}
       shell: bash -l {0}
