@@ -15,7 +15,7 @@ def create_release_note_file():
             full_filename = mapping[version_name]
             new_file.write("\n******************************")
             new_file.write("\n### Version: " + version_name + "\n")
-            curr_release_file = open("./tests/docs/raw_release_notes/" + full_filename, "r")
+            curr_release_file = open(RELEASE_NOTES_DIRECTORY + full_filename, "r")
             new_file.write(curr_release_file.read())
             new_file.write("\n")
             curr_release_file.close()
