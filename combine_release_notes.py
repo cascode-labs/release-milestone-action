@@ -5,6 +5,7 @@ RELEASE_NOTES_DIRECTORY = "../release_notes"
 COMBINED_NOTES_PATH = "./Release_Note_Log.md"
 
 def create_release_note_file():
+    print("File Contents: " + os.listdir(RELEASE_NOTES_DIRECTORY))
     sorted_files, mapping = _sort_filenames(os.listdir(RELEASE_NOTES_DIRECTORY))
     with open(COMBINED_NOTES_PATH, "w") as rewrite:
         rewrite.write('Release Note Log\n')
