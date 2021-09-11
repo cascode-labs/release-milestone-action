@@ -56,11 +56,11 @@ runs:
       uses: docker://decathlon/release-notes-generator-action:2.0.1
       env:
         GITHUB_TOKEN: ${{ github.token }}
-        OUTPUT_FOLDER: ${{ runner.temp }}
+        OUTPUT_FOLDER: ${{ github.workspace }}/${{ inputs.release_notes_folder_path }}
         USE_MILESTONE_TITLE: "true"
     - name: Generate Release Notes Summary
       run: |
-        cp ${{ runner.temp }}/${{ github.event.milestone.title }}.md ${{ inputs.release_notes_folder_path }}
+        # cp ${{ runner.temp }}/${{ github.event.milestone.title }}.md ${{ inputs.release_notes_folder_path }}
         python ${{ github.action_path }}/combine_release_notes.py ${{ inputs.release_notes_folder_path }} ${{ inputs.release_notes_summary_path }}
       shell: bash -l {0}
     - uses: actions/upload-artifact@v2
