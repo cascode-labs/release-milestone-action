@@ -70,15 +70,15 @@ def _sort_filename3(filenames: List[str]):
 
 
 if __name__ == '__main__':
-    if len(sys.argv) != 2:
+    if len(sys.argv) != 3:
         print("Error: Wrong number of inputs to combine_release_notes.py!")
         print(sys.argv)
         print("\nNumber of inputs:")
         print(len(sys.argv))
         sys.exit(1)
     else:
-        release_notes_folder_path = sys.argv[0]
-        release_notes_summary_path = sys.argv[1]
+        release_notes_folder_path = sys.argv[1]
+        release_notes_summary_path = sys.argv[2]
 
     try:
         create_release_note_file(release_notes_folder_path, release_notes_summary_path)
