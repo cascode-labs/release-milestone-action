@@ -39,13 +39,13 @@ runs:
         fi
         echo ${{ github.event.milestone.title }} > version
       shell: bash -l {0}
-   - name: Create release_notes_folder_path
-     run: |
-       if [ ! -d ${{ inputs.release_notes_folder_path }} ]; then
-         mkdir -p ${{ inputs.release_notes_folder_path }}
-       fi
-       ls -al ${{ inputs.release_notes_folder_path }}
-     shell: bash -l {0}
+    - name: Create release_notes_folder_path
+      run: |
+        if [ ! -d ${{ inputs.release_notes_folder_path }} ]; then
+          mkdir -p ${{ inputs.release_notes_folder_path }}
+        fi
+        ls -al ${{ inputs.release_notes_folder_path }}
+      shell: bash -l {0}
     #- name: Remove existing file
     #  run: |
     #    if [ -f "${{ github.workspace }}/temp_${{ github.event.milestone.title }}/${{ github.event.milestone.title }}.md" ]; then
