@@ -25,7 +25,7 @@ runs:
     - name: Check release name
       id: version-check
       run: |
-        echo "Milestone Title: "${{ github.event.milestone.title }}"
+        echo "Milestone Title: ${{ github.event.milestone.title }}"
         pip install semver
         SPLICED_TITLE=`echo "${{ github.event.milestone.title }}" | cut -d'v' -f 2`
         pysemver check ${SPLICED_TITLE}
