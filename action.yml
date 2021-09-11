@@ -8,68 +8,63 @@ inputs:
   release_notes_folder_path:
     description: 'path to the folder where the release note files are saved'
     required: false
-    default: 'docs/'
-  base_env_prefix:  # id of input
-    description: 'The prefix of the base Conda environment'
-    required: false
-    default: '/usr/share/miniconda'
+    default: 'docs/release_notes'
 outputs:
   version:
-    description: "The project's semantic version"
-    value: ${{ steps.build-package.outputs.PACKAGE_PATH }}
-  release-notes-version:
-    description: "The text of this version's release notes "
-    value: ${{ steps.build-package.outputs.PACKAGE_PATH }}
-  release-notes-summary:
-    description: "The file path of the generated package"
-    value: ${{ steps.build-package.outputs.PACKAGE_PATH }}
+    description: "The project's semantic version x.y.z"
+    value: ${{ steps.check-version.outputs.version }}
+  release-id:
+    description: "The ID of the created GitHub release"
+    value: ${{ steps.create-release.outputs.id }}
+  release-url:
+    description: "Github.com URL for the created GitHub release"
+    value: ${{ steps.create-release.outputs.url }}
 runs:
   using: "composite"
   steps:
     - name: Check release name
+      id: version-check
       run: |
+        echo "Milestone Title: "${{ github.event.milestone.title }}"
         pip install semver
         SPLICED_TITLE=`echo "${{ github.event.milestone.title }}" | cut -d'v' -f 2`
         pysemver check ${SPLICED_TITLE}
+        echo "::set-output name=version::$(echo $SPLICED_TITLE)"
       shell: bash -l {0}
     - name: Update version
       run: |
-        if [ -f version ]; then
-          echo ${{ github.event.milestone.title }} > version
-        else
-          echo "Unable to find version file in current directory. Creating version file with current milestone title."
+        if [ ! -f version ]; then
+          echo "Unable to find version file in root directory. Creating version file with current milestone title."
+          touch version
         fi
+        echo ${{ github.event.milestone.title }} > version
       shell: bash -l {0}
-    - name: Remove existing file
-      run: |
-        if [ -f "${{ github.workspace }}/temp_${{ github.event.milestone.title }}/${{ github.event.milestone.title }}.md" ]; then
-          rm -f ${{ github.workspace }}/temp_${{ github.event.milestone.title }}/${{ github.event.milestone.title }}.md
-        fi
-      shell: bash -l {0}
+    #- name: Remove existing file
+    #  run: |
+    #    if [ -f "${{ github.workspace }}/temp_${{ github.event.milestone.title }}/${{ github.event.milestone.title }}.md" ]; then
+    #      rm -f ${{ github.workspace }}/temp_${{ github.event.milestone.title }}/${{ github.event.milestone.title }}.md
+    #    fi
+    #  shell: bash -l {0}
     - name: Create Release Notes
       uses: docker://decathlon/release-notes-generator-action:2.0.1
       env:
         GITHUB_TOKEN: ${{ github.token }}
-        OUTPUT_FOLDER: ${{ github.workspace }}/release_notes
+        OUTPUT_FOLDER: ${{ inputs.release_notes_folder_path }}
         USE_MILESTONE_TITLE: "true"
-
-    - name: combine outputs
+    - name: Generate Release Notes Summary
       run: |
-        git pull
-        ls -al 
-        echo "------"
-        pwd
-        python release-milestone-action/combine_release_notes.py
+        python ${{ github.action_path }}/combine_release_notes.py ${{ inputs.release_notes_folder_path }} ${{ inputs.release_notes_summary_path }}
       shell: bash -l {0}
     - uses: actions/upload-artifact@v2
       with:
-        name: ${{ github.event.milestone.title }}
-        path: ${{ github.workspace }}/release_notes/${{ github.event.milestone.title }}
-    - uses: actions/create-release@v1
+        name: "release_notes"
+        path: ${{ inputs.release_notes_folder_path }}/${{ github.event.milestone.title }}.md
+    - uses: softprops/action-gh-release@v1
+      id: create-release
       with:
-        tag_name: ${{ github.ref }}
-        release_name: Release Changelog ${{ github.event.milestone.title }}
-        body_path: ${{ github.workspace }}/Release_Note_Log.md
+        tag_name: ${{ github.event.milestone.title }}
+        release_name: ${{ github.event.milestone.title }}
+        body_path: ${{ inputs.release_notes_folder_path }}/${{ github.event.milestone.title }}.md
         draft: true
 
 branding:
