@@ -2,7 +2,7 @@ import os
 import sys
 
 def create_release_note_file(folder_path: str, summary_path: str):
-    sorted_files, mapping = _sort_filenames(os.listdir(folder_path))
+    sorted_files, mapping = _sort_filenames(os.listdir(folder_path), os.path.basename(summary_path))
     with open(summary_path, "w") as rewrite:
         rewrite.write('Release Notes\n')
         rewrite.write('---------------------------------')
@@ -18,12 +18,12 @@ def create_release_note_file(folder_path: str, summary_path: str):
             curr_release_file.close()
 
 
-def _sort_filenames(files):
+def _sort_filenames(files, summary_filename):
     versions = list()
     version_files = dict()
     for file in files:
-        new_name = file.name
-        if new_name != "Release_Note_Log.md":
+        new_name = file
+        if new_name != summary_filename:
             try:
                 float(file[0])
             except:
