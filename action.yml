@@ -56,13 +56,16 @@ runs:
       uses: docker://decathlon/release-notes-generator-action:2.0.1
       env:
         GITHUB_TOKEN: ${{ github.token }}
-        OUTPUT_FOLDER: ${{ github.workspace }}/${{ inputs.release_notes_folder_path }}
-        USE_MILESTONE_TITLE: "true"
+        OUTPUT_FOLDER: ${{ github.workspace }}
+        FILENAME: raw_${{ github.event.milestone.title }}
     - name: Update Release Note
       run: |
         # chmod 775 ${{ inputs.release_notes_folder_path }}/${{ github.event.milestone.title }}.md
         ls -al ${{ inputs.release_notes_folder_path }}/${{ github.event.milestone.title }}.md
-        python ${{ github.action_path }}/update_release_note.py ${{ inputs.release_notes_folder_path }}/${{ github.event.milestone.title }}.md
+        python ${{ github.action_path }}/update_release_note.py \
+               ${{ github.workspace }}/raw_${{ github.event.milestone.title }} \
+               ${{ inputs.release_notes_folder_path }}/${{ github.event.milestone.title }}.md
+        rm ${{ github.workspace }}/raw_${{ github.event.milestone.title }}
         echo ""
         cat ${{ inputs.release_notes_folder_path }}/${{ github.event.milestone.title }}.md
       shell: bash -l {0}

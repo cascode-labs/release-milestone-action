@@ -4,11 +4,11 @@ from typing import List
 from pathlib import PurePath
 
 
-def update_release_note(input_filepath: str):
+def update_release_note(input_filepath: str, output_filepath: str):
     with open(input_filepath, 'r') as input_file:
         input_lines = input_file.readlines()
     output_lines = _update_file(input_lines, input_filepath)
-    with open(input_filepath, 'w') as output_file:
+    with open(output_filepath, 'w') as output_file:
         output_file.writelines(output_lines)
 
 
@@ -27,14 +27,14 @@ def _update_file(input_lines: List[str], input_filepath: str) -> List[str]:
 
 
 if __name__ == '__main__':
-    if len(sys.argv) != 2:
-        print("Error: Wrong number of inputs to combine_release_notes.py!")
+    if len(sys.argv) != 3:
+        print("Error: Wrong number of inputs to update_release_note.py!")
         print(sys.argv)
         print("\nNumber of inputs:")
         print(len(sys.argv))
         sys.exit(1)
     else:
-        release_note_filepath = sys.argv[1]
-
-    update_release_note(release_note_filepath)
+        raw_release_note_filepath = sys.argv[1]
+        release_note_filepath = sys.argv[2]
+    update_release_note(raw_release_note_filepath, release_note_filepath)
     print("Successfully created full release notes!")
