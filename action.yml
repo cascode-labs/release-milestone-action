@@ -38,6 +38,7 @@ runs:
           touch version
         fi
         echo ${{ github.event.milestone.title }} > version
+        mkdir -p ${{ runner.temp }}
       shell: bash -l {0}
     #- name: Create release_notes_folder_path
     #  run: |
@@ -56,7 +57,8 @@ runs:
       uses: docker://decathlon/release-notes-generator-action:2.0.1
       env:
         GITHUB_TOKEN: ${{ github.token }}
-        OUTPUT_FOLDER: ${{ github.workspace }}/release_notes
+        OUTPUT_FOLDER: ${{ runner.temp }}/release_notes
+        USE_MILESTONE_TITLE: "true"
     - name: Update Release Notes
       run: |
         # chmod 775 ${{ inputs.release_notes_folder_path }}/${{ github.event.milestone.title }}.md
@@ -64,9 +66,8 @@ runs:
         mkdir -p ${{ inputs.release_notes_folder_path }}
         echo "Update Release Note"
         python ${{ github.action_path }}/update_release_note.py \
-               ${{ github.workspace }}/release_notes/release_file.md \
+               ${{ runner.temp }}/release_notes/${{ github.event.milestone.title }}.md \
                ${{ inputs.release_notes_folder_path }}/${{ github.event.milestone.title }}.md
-        rm -f ${{ github.workspace }}/release_notes/release_file.md
         ls -al ${{ inputs.release_notes_folder_path }}/${{ github.event.milestone.title }}.md
         echo ""
         cat ${{ inputs.release_notes_folder_path }}/${{ github.event.milestone.title }}.md
