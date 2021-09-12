@@ -35,8 +35,6 @@ if __name__ == '__main__':
         sys.exit(1)
     else:
         release_note_filepath = sys.argv[1]
-    try:
-        update_release_note(release_note_filepath)
-        print("Successfully created full release notes!")
-    except:
-        print("Unable to create full release notes. Make sure the milestone titles follow the version scheme of v#.#.#")
+
+    update_release_note(release_note_filepath)
+    print("Successfully created full release notes!")
