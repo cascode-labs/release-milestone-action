@@ -1,10 +1,6 @@
 import os
 import sys
 
-# RELEASE_NOTES_DIRECTORY = "../release_notes"
-# COMBINED_NOTES_PATH = "./Release_Note_Log.md"
-
-
 def create_release_note_file(folder_path: str, summary_path: str):
     sorted_files, mapping = _sort_filenames(os.listdir(folder_path))
     with open(summary_path, "w") as rewrite:
@@ -15,7 +11,7 @@ def create_release_note_file(folder_path: str, summary_path: str):
         for version_name in sorted_files:
             full_filename = mapping[version_name]
             new_file.write("\n******************************")
-            new_file.write("\n### Version: " + version_name + "\n")
+            new_file.write("\n## Version: " + version_name + "\n")
             curr_release_file = open(folder_path + full_filename, "r")
             new_file.write(curr_release_file.read())
             new_file.write("\n")

@@ -58,20 +58,30 @@ runs:
         GITHUB_TOKEN: ${{ github.token }}
         OUTPUT_FOLDER: ${{ github.workspace }}/${{ inputs.release_notes_folder_path }}
         USE_MILESTONE_TITLE: "true"
+    - name: Update Release Note
+      run: |
+        python ${{ github.action_path }}/update_release_note.py ${{ inputs.release_notes_folder_path }}/${{ github.event.milestone.title }}.md
+        echo ""
+        cat ${{ inputs.release_notes_folder_path }}/${{ github.event.milestone.title }}.md
+      shell: bash -l {0}
     - name: Generate Release Notes Summary
       run: |
         # cp ${{ runner.temp }}/${{ github.event.milestone.title }}.md ${{ inputs.release_notes_folder_path }}
         python ${{ github.action_path }}/combine_release_notes.py ${{ inputs.release_notes_folder_path }} ${{ inputs.release_notes_summary_path }}
+        echo ""
+        cat ${{ inputs.release_notes_summary_path }}
       shell: bash -l {0}
     - uses: actions/upload-artifact@v2
       with:
         name: "release_notes"
-        path: ${{ inputs.release_notes_folder_path }}/${{ github.event.milestone.title }}.md
+        path: |
+          ${{ inputs.release_notes_folder_path }}/${{ github.event.milestone.title }}.md
+          ${{ inputs.release_notes_summary_path }}
     - uses: softprops/action-gh-release@v1
       id: create-release
       with:
         tag_name: ${{ github.event.milestone.title }}
-        release_name: ${{ github.event.milestone.title }}
+        name: ${{ github.event.milestone.title }}
         body_path: ${{ inputs.release_notes_folder_path }}/${{ github.event.milestone.title }}.md
         draft: true
 
