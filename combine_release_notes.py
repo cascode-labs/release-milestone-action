@@ -29,7 +29,7 @@ def _sort_filenames(files, summary_filename):
             except:
                 new_name = new_name[1:-3]
             versions.append(str(new_name))
-            version_files[new_name] = file.name
+            version_files[new_name] = file
     versions.sort(key=lambda s: list(map(int, s.split("."))))
     return versions[::-1], version_files
 
