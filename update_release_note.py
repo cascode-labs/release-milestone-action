@@ -17,7 +17,7 @@ def _update_file(input_lines: List[str], input_filepath: str) -> List[str]:
     filepath = PurePath(input_filepath)
     version = filepath.name[1:-3]
     header_lines = [
-        f"## {version}\n",
+        f"## Version v{version}\n",
         f"Release Date: {today:%m/%d/%Y}\n",
     ]
     output_lines = list()

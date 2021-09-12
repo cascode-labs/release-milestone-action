@@ -9,7 +9,6 @@ def create_release_note_file(folder_path: str, summary_path: str):
         summary_file.write('---------------------------------\n\n')
         for version_name in sorted_files:
             full_filename = mapping[version_name]
-            summary_file.write("\n## Version: " + version_name + "\n")
             with open(os.path.join(folder_path, full_filename), "r") as curr_release_file:
                 summary_file.write(curr_release_file.read())
                 summary_file.write("\n")
