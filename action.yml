@@ -63,7 +63,7 @@ runs:
         # chmod 775 ${{ inputs.release_notes_folder_path }}/${{ github.event.milestone.title }}.md
         echo "Update Release Note"
         python ${{ github.action_path }}/update_release_note.py \
-               ${{ github.workspace }}/raw_${{ github.event.milestone.title }}.md \
+               raw_${{ github.event.milestone.title }}.md \
                ${{ inputs.release_notes_folder_path }}/${{ github.event.milestone.title }}.md
         rm -f raw_${{ github.event.milestone.title }}.md
         ls -al ${{ inputs.release_notes_folder_path }}/${{ github.event.milestone.title }}.md
