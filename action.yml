@@ -66,7 +66,7 @@ runs:
         mkdir -p ${{ inputs.release_notes_folder_path }}
         echo "Update Release Note"
         python ${{ github.action_path }}/update_release_note.py \
-               ${{ inputs.release_notes_folder_path }}/raw/${{ github.event.milestone.title }}.md
+               ${{ inputs.release_notes_folder_path }}/raw/${{ github.event.milestone.title }}.md \
                ${{ inputs.release_notes_folder_path }}/${{ github.event.milestone.title }}.md
         ls -al ${{ inputs.release_notes_folder_path }}/${{ github.event.milestone.title }}.md
         echo ""
