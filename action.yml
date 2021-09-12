@@ -80,6 +80,12 @@ runs:
         python ${{ github.action_path }}/combine_release_notes.py \
                ${{ inputs.release_notes_folder_path }} \
                ${{ inputs.release_notes_summary_path }}
+        echo "Rename for artifacts"
+        mkdir -p ${{ runner.temp }}/release_notes_artifacts
+        cp ${{ inputs.release_notes_summary_path }} ${{ runner.temp }}/release_notes_artifacts/release_notes_log.md
+        cp ${{ inputs.release_notes_folder_path }}/${{ github.event.milestone.title }}.md \
+           ${{ runner.temp }}/release_notes_artifacts/release_notes_${{ github.event.milestone.title }}.md
+
       shell: bash -l {0}
     - name: Check Release Note
       run: |
@@ -93,8 +99,8 @@ runs:
       with:
         name: "release_notes"
         path: |
-          ${{ inputs.release_notes_folder_path }}/${{ github.event.milestone.title }}.md
-          ${{ inputs.release_notes_summary_path }}
+          ${{ runner.temp }}/release_notes_artifacts/release_notes_log.md
+          ${{ runner.temp }}/release_notes_artifacts/release_notes_${{ github.event.milestone.title }}.md
     - uses: actions/download-artifact@v2
       with:
         path: ${{ runner.temp }}/release_artifacts
