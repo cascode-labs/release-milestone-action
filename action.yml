@@ -62,15 +62,16 @@ runs:
     - name: Update Release Notes
       run: |
         sudo chmod 775 ${{ github.workspace }}/raw_release_note/${{ github.event.milestone.title }}.md
-        sudo chmod 775 ${{ github.workspace }}/raw_release_note
         ls -al ${{ github.workspace }}/raw_release_note
+        sudo chmod 775 ${{ github.workspace }}/raw_release_note
+        ls -al ${{ github.workspace }}
         mkdir -p ${{ inputs.release_notes_folder_path }}
         echo "Update Release Note"
         python ${{ github.action_path }}/update_release_note.py \
                ${{ github.workspace }}/raw_release_note/${{ github.event.milestone.title }}.md \
                ${{ inputs.release_notes_folder_path }}/${{ github.event.milestone.title }}.md
         ls -al ${{ inputs.release_notes_folder_path }}
-        rm -rf ${{ github.workspace }}/raw_release_note
+        sudo rm -rf ${{ github.workspace }}/raw_release_note
         echo ""
         cat ${{ inputs.release_notes_folder_path }}/${{ github.event.milestone.title }}.md
         echo ""
@@ -79,7 +80,13 @@ runs:
         python ${{ github.action_path }}/combine_release_notes.py \
                ${{ inputs.release_notes_folder_path }} \
                ${{ inputs.release_notes_summary_path }}
-        echo ""
+      shell: bash -l {0}
+    - name: Check Release Note
+      run: |
+          cat ${{ inputs.release_notes_folder_path }}/${{ github.event.milestone.title }}.md
+      shell: bash -l {0}
+    - name: Check Summary
+      run: |
         cat ${{ inputs.release_notes_summary_path }}
       shell: bash -l {0}
     - uses: actions/upload-artifact@v2
@@ -88,6 +95,9 @@ runs:
         path: |
           ${{ inputs.release_notes_folder_path }}/${{ github.event.milestone.title }}.md
           ${{ inputs.release_notes_summary_path }}
+    - uses: actions/download-artifact@v2
+      with:
+        path: ${{ runner.temp }}/release_artifacts
     - uses: softprops/action-gh-release@v1
       id: create-release
       with:
@@ -95,6 +105,8 @@ runs:
         name: ${{ github.event.milestone.title }}
         body_path: ${{ inputs.release_notes_folder_path }}/${{ github.event.milestone.title }}.md
         draft: true
+        files: |
+          ${{ runner.temp }}/release_artifacts/*
 
 branding:
   icon: 'package'
