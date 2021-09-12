@@ -108,6 +108,10 @@ runs:
       run: |
         ls -al ${{ runner.temp }}/release_artifacts
       shell: bash -l {0}
+    - uses: EndBug/add-and-commit@v7 # You can change this to use a specific version.
+      with:
+        add: "['${{ inputs.release_notes_folder_path }}/${{ github.event.milestone.title }}.md', '${{ inputs.release_notes_summary_path }}']"
+        message: released milestone ${{ github.event.milestone.title }}
     - uses: softprops/action-gh-release@v1
       id: create-release
       with:
