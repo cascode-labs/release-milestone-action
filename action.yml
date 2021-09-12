@@ -60,7 +60,8 @@ runs:
         USE_MILESTONE_TITLE: "true"
     - name: Update Release Note
       run: |
-        chmod 775 ${{ inputs.release_notes_folder_path }}/${{ github.event.milestone.title }}.md
+        # chmod 775 ${{ inputs.release_notes_folder_path }}/${{ github.event.milestone.title }}.md
+        ls -al ${{ inputs.release_notes_folder_path }}/${{ github.event.milestone.title }}.md
         python ${{ github.action_path }}/update_release_note.py ${{ inputs.release_notes_folder_path }}/${{ github.event.milestone.title }}.md
         echo ""
         cat ${{ inputs.release_notes_folder_path }}/${{ github.event.milestone.title }}.md
