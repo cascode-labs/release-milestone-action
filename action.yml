@@ -98,6 +98,10 @@ runs:
     - uses: actions/download-artifact@v2
       with:
         path: ${{ runner.temp }}/release_artifacts
+    - name: Downloaded Artifacts
+      run: |
+        ls -al ${{ runner.temp }}/release_artifacts
+      shell: bash -l {0}
     - uses: softprops/action-gh-release@v1
       id: create-release
       with:
@@ -106,7 +110,7 @@ runs:
         body_path: ${{ inputs.release_notes_folder_path }}/${{ github.event.milestone.title }}.md
         draft: true
         files: |
-          ${{ runner.temp }}/release_artifacts/*
+          ${{ runner.temp }}/release_artifacts/**
 
 branding:
   icon: 'package'
