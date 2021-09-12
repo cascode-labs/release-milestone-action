@@ -3,19 +3,17 @@ import sys
 
 def create_release_note_file(folder_path: str, summary_path: str):
     sorted_files, mapping = _sort_filenames(os.listdir(folder_path), os.path.basename(summary_path))
-    with open(summary_path, "w") as rewrite:
-        rewrite.write('Release Notes\n')
-        rewrite.write('---------------------------------')
-        rewrite.close()
-    with open(summary_path, "a") as new_file:
+    print(sorted_files)
+    with open(summary_path, "w") as summary_file:
+        summary_file.write('Release Notes\n')
+        summary_file.write('---------------------------------\n\n')
         for version_name in sorted_files:
             full_filename = mapping[version_name]
-            new_file.write("\n******************************")
-            new_file.write("\n## Version: " + version_name + "\n")
-            curr_release_file = open(folder_path + full_filename, "r")
-            new_file.write(curr_release_file.read())
-            new_file.write("\n")
-            curr_release_file.close()
+            summary_file.write("---\n\n")
+            summary_file.write("\n## Version: " + version_name + "\n")
+            with open(folder_path + full_filename, "r") as curr_release_file:
+                summary_file.write(curr_release_file.read())
+                summary_file.write("\n")
 
 
 def _sort_filenames(files, summary_filename):
