@@ -37,4 +37,4 @@ if __name__ == '__main__':
         raw_release_note_filepath = sys.argv[1]
         release_note_filepath = sys.argv[2]
     update_release_note(raw_release_note_filepath, release_note_filepath)
-    print("Successfully created full release notes!")
+    print("Successfully updated release note!")

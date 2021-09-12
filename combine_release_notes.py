@@ -76,10 +76,7 @@ if __name__ == '__main__':
         release_notes_folder_path = sys.argv[1]
         release_notes_summary_path = sys.argv[2]
 
-    try:
-        create_release_note_file(release_notes_folder_path, release_notes_summary_path)
-        print("Successfully created full release notes!")
-    except:
-        print("Unable to create full release notes. Make sure the milestone titles follow the version scheme of v#.#.#")
-        print(os.listdir(release_notes_folder_path))
-        print("----------------release_notes directory")
+    create_release_note_file(release_notes_folder_path, release_notes_summary_path)
+    print("Successfully created full release notes!")
+    # print(os.listdir(release_notes_folder_path))
+    # print("----------------release_notes directory")

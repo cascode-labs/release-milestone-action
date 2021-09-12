@@ -68,13 +68,15 @@ runs:
         python ${{ github.action_path }}/update_release_note.py \
                ${{ inputs.release_notes_folder_path }}/raw/${{ github.event.milestone.title }}.md \
                ${{ inputs.release_notes_folder_path }}/${{ github.event.milestone.title }}.md
-        ls -al ${{ inputs.release_notes_folder_path }}/${{ github.event.milestone.title }}.md
+        ls -al ${{ inputs.release_notes_folder_path }}
         echo ""
         cat ${{ inputs.release_notes_folder_path }}/${{ github.event.milestone.title }}.md
         echo ""
         echo "Generate Release Notes Summary"
         # cp ${{ runner.temp }}/${{ github.event.milestone.title }}.md ${{ inputs.release_notes_folder_path }}
-        python ${{ github.action_path }}/combine_release_notes.py ${{ inputs.release_notes_folder_path }} ${{ inputs.release_notes_summary_path }}
+        python ${{ github.action_path }}/combine_release_notes.py \
+               ${{ inputs.release_notes_folder_path }} \
+               ${{ inputs.release_notes_summary_path }}
         echo ""
         cat ${{ inputs.release_notes_summary_path }}
       shell: bash -l {0}
