@@ -57,16 +57,15 @@ runs:
       env:
         GITHUB_TOKEN: ${{ github.token }}
         OUTPUT_FOLDER: ${{ github.workspace }}/release_notes
-        FILENAME: raw_${{ github.event.milestone.title }}
     - name: Update Release Notes
       run: |
         # chmod 775 ${{ inputs.release_notes_folder_path }}/${{ github.event.milestone.title }}.md
         ls -al ${{ github.workspace }}/release_notes
         echo "Update Release Note"
         python ${{ github.action_path }}/update_release_note.py \
-               ${{ github.workspace }}/release_notes/raw_${{ github.event.milestone.title }}.md \
+               ${{ github.workspace }}/release_notes/release_file.md \
                ${{ inputs.release_notes_folder_path }}/${{ github.event.milestone.title }}.md
-        rm -f ${{ github.workspace }}/release_notes/raw_${{ github.event.milestone.title }}.md
+        rm -f ${{ github.workspace }}/release_notes/release_file.md
         ls -al ${{ inputs.release_notes_folder_path }}/${{ github.event.milestone.title }}.md
         echo ""
         cat ${{ inputs.release_notes_folder_path }}/${{ github.event.milestone.title }}.md
