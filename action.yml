@@ -1,5 +1,5 @@
-name: 'Draft Release Milestone'
-description: 'Updates a Github Repo when a milestone is closed'
+name: 'Release Milestone'
+description: 'Updates a Github Repo with a commit when a semver milestone is closed'
 inputs:
   release_notes_summary_path:
     description: 'Path used to save the release notes summary markdown file'
@@ -67,7 +67,7 @@ runs:
         ls -al ${{ github.workspace }}
         mkdir -p ${{ inputs.release_notes_folder_path }}
         echo "Update Release Note"
-        python ${{ github.action_path }}/update_release_note.py \
+        python ${{ github.action_path }}/update_file.py release_note \
                ${{ github.workspace }}/raw_release_note/${{ github.event.milestone.title }}.md \
                ${{ inputs.release_notes_folder_path }}/${{ github.event.milestone.title }}.md
         ls -al ${{ inputs.release_notes_folder_path }}
@@ -85,7 +85,13 @@ runs:
         cp ${{ inputs.release_notes_summary_path }} ${{ runner.temp }}/release_notes_artifacts/release_notes_log.md
         cp ${{ inputs.release_notes_folder_path }}/${{ github.event.milestone.title }}.md \
            ${{ runner.temp }}/release_notes_artifacts/release_notes_${{ github.event.milestone.title }}.md
-
+        echo ""
+        echo "Update ReadMe"
+        python ${{ github.action_path }}/update_file.py readme \
+               ${{ github.workspace }}/ReadMe.md \
+               ${{ steps.version-check.outputs.version }}
+        echo ""
+        cat ReadMe.md
       shell: bash -l {0}
     - name: Check Release Note
       run: |
