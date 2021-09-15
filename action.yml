@@ -25,20 +25,22 @@ runs:
     - name: Check release name
       id: version-check
       run: |
+        echo "::group::Check Release Name"
         echo "Milestone Title: ${{ github.event.milestone.title }}"
         pip install semver
         SPLICED_TITLE=`echo "${{ github.event.milestone.title }}" | cut -d'v' -f 2`
         pysemver check ${SPLICED_TITLE}
         echo "::set-output name=version::$(echo $SPLICED_TITLE)"
-      shell: bash -l {0}
-    - name: Update version
-      run: |
+        echo "::endgroup::"
+        echo ""
+        echo "::group::Update Version File"
         if [ ! -f version ]; then
           echo "Unable to find version file in root directory. Creating version file with current milestone title."
           touch version
         fi
         echo ${{ github.event.milestone.title }} > version
         mkdir -p ${{ inputs.release_notes_folder_path }}
+        echo "::endgroup::"
       shell: bash -l {0}
     #- name: Create release_notes_folder_path
     #  run: |
@@ -119,16 +121,6 @@ runs:
       with:
         add: "['${{ inputs.release_notes_folder_path }}/${{ github.event.milestone.title }}.md', '${{ inputs.release_notes_summary_path }}']"
         message: released milestone ${{ github.event.milestone.title }}
-    - uses: softprops/action-gh-release@v1
-      id: create-release
-      with:
-        tag_name: ${{ github.event.milestone.title }}
-        name: ${{ github.event.milestone.title }}
-        body_path: ${{ inputs.release_notes_folder_path }}/${{ github.event.milestone.title }}.md
-        draft: true
-        target_commitish: ${{ steps.commit-changes.outputs.commit_sha }}
-        files: |
-          ${{ runner.temp }}/release_artifacts/**
 
 branding:
   icon: 'package'
